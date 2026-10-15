@@ -198,6 +198,20 @@ em{font-style:normal;color:var(--gold-ink)}
 .step .h3{margin-bottom:16px}
 .step p{color:var(--ink-2);font-weight:300;font-size:16px;max-width:34ch}
 
+/* ---------- ponte Como funciona → Para quem ---------- */
+.bridged{padding-bottom:0}
+.bridge{margin-top:clamp(96px,11vw,160px);text-align:center;display:flex;flex-direction:column;align-items:center}
+.bridge-text{font-family:var(--f-display);font-size:clamp(28px,3.2vw,44px);line-height:1.15;letter-spacing:-.025em}
+.bridge-paths{display:flex;gap:clamp(48px,8vw,120px);margin-top:20px;font-size:15px;color:var(--ink-2)}
+.bridge-paths span{position:relative}
+.bridge-paths span:first-child::after,.bridge-paths span:last-child::before{content:"";position:absolute;top:50%;width:clamp(16px,2.5vw,32px);height:1px;background:var(--gold-ink)}
+.bridge-paths span:first-child::after{left:calc(100% + 12px)}
+.bridge-paths span:last-child::before{right:calc(100% + 12px)}
+.bridge-line{display:block;width:1px;height:clamp(72px,9vw,128px);margin-top:28px;--rule:var(--gold-ink)}
+.bridge-line::before{bottom:0;height:auto;transform-origin:top}
+.js .bridge .bridge-line::before{transform:scaleY(0)}
+.js .bridge .bridge-line.in::before{transform:scaleY(1)}
+
 /* ---------- para quem ---------- */
 .audience{background:var(--paper-2)}
 /* para quem: duas metades de ponta a ponta, marfim e verde */
@@ -464,7 +478,7 @@ em{font-style:normal;color:var(--gold-ink)}
 </section>
 
 <!-- ========== MÉTODO ========== -->
-<section class="section" id="metodo">
+<section class="section bridged" id="metodo">
   <div class="wrap">
     <div class="section-head">
       <p class="label up">Como funciona</p>
@@ -486,6 +500,12 @@ em{font-style:normal;color:var(--gold-ink)}
         <h3 class="h3">A prática</h3>
         <p>Aulas individuais focadas em conversação, com a gramática aplicada à fala e avaliação contínua, sem provas.</p>
       </article>
+    </div>
+    <!-- ponte para a seção seguinte: a linha desce até a divisa das duas metades -->
+    <div class="bridge">
+      <p class="bridge-text split">O mesmo cuidado, <em>dois caminhos.</em></p>
+      <div class="bridge-paths up" style="--d:.5s"><span>Para você</span><span>Para empresas</span></div>
+      <span class="bridge-line rule" style="--d:.7s"></span>
     </div>
   </div>
 </section>
