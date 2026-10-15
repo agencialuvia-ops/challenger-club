@@ -218,16 +218,69 @@ em{font-style:normal;color:var(--gold-ink)}
 .aud-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .aud{--edge:max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
   position:relative;isolation:isolate;padding:clamp(48px,5vw,80px) clamp(28px,4.5vw,72px)}
-.aud{min-height:41.6vw;display:flex;align-items:center}
+.aud{min-height:41.6vw;display:flex;align-items:center;overflow:hidden}
 /* Para você: ilustração do aeroporto, figura à esquerda, texto à direita */
-.aud:first-child{padding-left:45%;justify-content:flex-start;
-  background:linear-gradient(90deg,transparent var(--fade,100%),rgba(239,234,224,.88) calc(var(--fade,100%) + 90px)),
-    #EFEAE0 url(assets/bg-voce.webp) left bottom/cover no-repeat}
+.aud:first-child{padding-left:45%;justify-content:flex-start;background:#EFEAE0}
 /* Para empresas: ilustração do palco, palco à direita, texto à esquerda */
 .aud:last-child{padding-right:var(--edge);color:var(--on-dark);--rule:var(--line-dark);background:var(--forest-deep)}
-.aud:last-child::before{content:"";position:absolute;inset:0;z-index:-1;transform-origin:left;
-  background:linear-gradient(90deg,rgba(20,42,33,.6) 0%,rgba(20,42,33,.25) 45%,transparent 70%),
-    #1B3A2E url(assets/bg-empresas.webp) right bottom/cover no-repeat}
+.aud:last-child::before{content:"";position:absolute;inset:0;z-index:-1;transform-origin:left;background:#1B3A2E}
+
+/* ---------- cenas animadas (ilustração + camadas por cima) ----------
+   .scene recebe o tamanho exato da imagem em "cover" via JS (fitAud),
+   então as camadas usam % das coordenadas da imagem original 1920x1600. */
+.scene{position:absolute;bottom:0;z-index:-1;pointer-events:none;width:100%;height:100%}
+.scene--voce{left:0}
+.scene--emp{right:0}
+.scene-in{position:absolute;inset:0;transform-origin:50% 100%}
+.scene img{display:block;width:100%;height:100%}
+.scene i{position:absolute;display:block}
+.aud-veil{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.aud:first-child .aud-veil{background:linear-gradient(90deg,transparent var(--fade,100%),rgba(239,234,224,.88) calc(var(--fade,100%) + 90px))}
+.aud:last-child .aud-veil{background:linear-gradient(90deg,rgba(20,42,33,.6) 0%,rgba(20,42,33,.25) 45%,transparent 70%)}
+
+/* aeroporto: céu da janela (acima da cabeça da figura) */
+.sky{left:4.2%;top:10.4%;width:35.7%;height:33%;overflow:hidden}
+.cloud{border-radius:50%;background:rgba(255,253,247,.75);filter:blur(14px)}
+.cloud.c1{width:38%;height:14%;top:12%;left:-40%;animation:cloud 46s linear infinite}
+.cloud.c2{width:28%;height:10%;top:44%;left:-40%;animation:cloud 62s linear -24s infinite;opacity:.7}
+.cloud.c3{width:46%;height:16%;top:70%;left:-40%;animation:cloud 78s linear -50s infinite;opacity:.55}
+.sun{width:60%;aspect-ratio:1;right:-22%;top:-26%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,250,232,.9),rgba(255,250,232,0) 65%);animation:sun 9s ease-in-out infinite}
+.glint{inset:0;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.35) 50%,transparent 60%) no-repeat;
+  background-size:300% 100%;animation:glint 11s ease-in-out 2s infinite}
+.mote{width:.35%;aspect-ratio:1;border-radius:50%;background:rgba(150,135,105,.45);animation:mote 14s ease-in-out infinite}
+
+/* palco: luzes do teto, canhão de luz, tela com gráfico */
+.light{width:3.4%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;
+  background:radial-gradient(circle,rgba(255,244,200,.95) 0 12%,rgba(255,236,170,.35) 30%,rgba(255,236,170,0) 68%);
+  animation:twinkle 3.6s ease-in-out infinite;animation-delay:calc(var(--k) * -.55s)}
+.beam{left:57%;top:2.5%;width:11.2%;height:47.5%;transform-origin:50% 0;
+  clip-path:polygon(25% 0,72% 0,100% 100%,0 100%);
+  background:linear-gradient(to bottom,rgba(225,245,230,.22),rgba(225,245,230,.04));
+  animation:beam 7s ease-in-out infinite}
+.screen{left:68.2%;top:21.2%;width:26%;height:18.8%;border-radius:2px;animation:screen 5s ease-in-out infinite}
+.chart{left:82.8%;top:26.2%;width:7.8%;height:10%;overflow:visible}
+.chart polyline{fill:none;stroke:#d9f0df;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:1;stroke-dashoffset:1;filter:drop-shadow(0 0 6px rgba(190,240,205,.8));animation:chart 6s ease-in-out 1s infinite}
+
+@keyframes kenburns{from{transform:scale(1)}to{transform:scale(1.045)}}
+@keyframes cloud{to{transform:translateX(370%)}}
+@keyframes sun{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes glint{0%{background-position:120% 0}35%,100%{background-position:-20% 0}}
+@keyframes mote{0%,100%{transform:translate(0,0);opacity:0}20%,80%{opacity:1}50%{transform:translate(30px,-40px)}}
+@keyframes twinkle{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(.85)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
+@keyframes beam{0%,100%{opacity:.65;transform:rotate(-1.2deg)}50%{opacity:1;transform:rotate(1.2deg)}}
+@keyframes screen{0%,100%{box-shadow:0 0 40px 6px rgba(140,210,170,.10)}50%{box-shadow:0 0 70px 14px rgba(140,210,170,.24)}}
+@keyframes chart{0%{stroke-dashoffset:1;opacity:1}45%{stroke-dashoffset:0;opacity:1}75%{stroke-dashoffset:0;opacity:1}90%,100%{stroke-dashoffset:0;opacity:0}}
+
+/* movimento só com JS e sem "reduzir movimento"; sem isso a cena fica parada */
+.scene i,.chart polyline{animation-play-state:paused}
+.js .scene i,.js .chart polyline{animation-play-state:running}
+.js .scene-in{animation:kenburns 26s ease-in-out infinite alternate}
+html:not(.js) .chart{display:none}
+/* metade verde: a cena aparece depois do painel deslizar */
+.js .panel .scene,.js .panel .aud-veil{opacity:0;transition:opacity 1.4s ease .9s}
+.js .panel.in .scene,.js .panel.in .aud-veil{opacity:1}
 .aud-inner{max-width:420px;width:100%}
 .aud .label{margin-bottom:24px}
 .aud .h3{font-size:clamp(26px,2.2vw,34px);line-height:1.15;letter-spacing:-.025em;margin-bottom:20px;max-width:19ch}
@@ -350,8 +403,8 @@ em{font-style:normal;color:var(--gold-ink)}
   .step .num{margin-bottom:20px}
   .aud-split{grid-template-columns:1fr}
   .aud:first-child,.aud:last-child{padding-left:var(--gutter);padding-right:var(--gutter);min-height:0;justify-content:flex-start}
-  .aud:first-child{background:linear-gradient(rgba(239,234,223,.82),rgba(239,234,223,.82)),#EFEADF url(assets/bg-voce.webp) left center/cover no-repeat}
-  .aud:last-child::before{background:linear-gradient(rgba(20,42,33,.7),rgba(20,42,33,.7)),#1E4234 url(assets/bg-empresas.webp) 70% center/cover no-repeat}
+  .aud:first-child .aud-veil{background:rgba(239,234,224,.8)}
+  .aud:last-child .aud-veil{background:rgba(20,42,33,.66)}
   .aud-inner{max-width:none}
   .pillars{grid-template-columns:1fr;gap:48px}
   .pillar + .pillar{border-left:0;padding-top:48px}
@@ -514,6 +567,16 @@ em{font-style:normal;color:var(--gold-ink)}
 <section class="audience" id="para-quem">
   <div class="aud-split">
     <article class="aud">
+      <div class="scene scene--voce" aria-hidden="true">
+        <div class="scene-in">
+          <img src="assets/bg-voce.webp" alt="" loading="lazy">
+          <i class="sky"><i class="sun"></i><i class="cloud c1"></i><i class="cloud c2"></i><i class="cloud c3"></i><i class="glint"></i></i>
+          <i class="mote" style="left:12%;top:58%"></i>
+          <i class="mote" style="left:24%;top:66%;animation-delay:-5s"></i>
+          <i class="mote" style="left:34%;top:52%;animation-delay:-9s"></i>
+        </div>
+      </div>
+      <div class="aud-veil"></div>
       <div class="aud-inner">
         <p class="label up">Para você</p>
         <h3 class="h3 split">Executivos e profissionais com um objetivo claro.</h3>
@@ -528,6 +591,16 @@ em{font-style:normal;color:var(--gold-ink)}
       </div>
     </article>
     <article class="aud panel">
+      <div class="scene scene--emp" aria-hidden="true">
+        <div class="scene-in">
+          <img src="assets/bg-empresas.webp" alt="" loading="lazy">
+          <i class="beam"></i>
+          <i class="light" style="left:48.96%;top:5.63%;--k:0"></i><i class="light" style="left:57.29%;top:6%;--k:1"></i><i class="light" style="left:65.63%;top:6.31%;--k:2"></i><i class="light" style="left:73.96%;top:6.63%;--k:3"></i><i class="light" style="left:82.29%;top:6.88%;--k:4"></i><i class="light" style="left:90.63%;top:7.19%;--k:5"></i><i class="light" style="left:98.96%;top:7.44%;--k:6"></i>
+          <i class="screen"></i>
+          <svg class="chart" viewBox="0 0 150 160" preserveAspectRatio="none" style="position:absolute"><polyline pathLength="1" points="10,140 70,95 85,120 140,50"/></svg>
+        </div>
+      </div>
+      <div class="aud-veil"></div>
       <div class="aud-inner">
         <p class="label up" style="--d:.5s">Para empresas</p>
         <h3 class="h3 split" style="--d:.55s">Programas In Company para equipes e lideranças.</h3>
@@ -747,8 +820,13 @@ const fitAud = () => {
     inR.style.maxWidth = Math.max(340, Math.min(420, stage - padL - 24)) + "px";
   }
 };
-addEventListener("resize", fitAud); fitAud();
-document.fonts && document.fonts.ready.then(fitAud);
+const sizeScenes = () => auds.forEach(a => {
+  const W = a.offsetWidth, H = a.offsetHeight, sc = Math.max(W / 1920, H / 1600), sEl = a.querySelector(".scene");
+  sEl.style.width = 1920 * sc + "px"; sEl.style.height = 1600 * sc + "px";
+});
+const fitAll = () => { fitAud(); sizeScenes(); };
+addEventListener("resize", fitAll); fitAll();
+document.fonts && document.fonts.ready.then(fitAll);
 
 /* ---- revela ao entrar na tela ---- */
 const targets = ".up,.split,.rule,.panel,.crest-in,.not-list";
