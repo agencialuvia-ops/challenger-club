@@ -203,18 +203,25 @@ em{font-style:normal;color:var(--gold-ink)}
 /* para quem: duas metades de ponta a ponta, marfim e verde */
 #para-quem{padding:var(--section) 0 0}
 #para-quem .section-head{margin-bottom:clamp(48px,6vw,80px)}
-.aud-split{display:grid;grid-template-columns:1fr 1fr}
+.aud-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .aud{--edge:max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
-  position:relative;isolation:isolate;padding:clamp(56px,7vw,112px) clamp(28px,5vw,88px) clamp(64px,8vw,128px)}
-.aud:first-child{padding-left:var(--edge);background:var(--paper)}
-.aud:last-child{padding-right:var(--edge);color:var(--on-dark);--rule:var(--line-dark)}
-.aud:last-child::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--forest);transform-origin:left}
-.aud-inner{max-width:500px}
-.aud .label{margin-bottom:32px}
-.aud .h3{font-size:clamp(28px,2.8vw,40px);line-height:1.15;letter-spacing:-.025em;margin-bottom:24px;max-width:19ch}
-.aud-inner > p{color:var(--ink-2);font-weight:300;margin-bottom:48px;max-width:40ch}
+  position:relative;isolation:isolate;padding:clamp(48px,5vw,80px) clamp(28px,4.5vw,72px)}
+.aud{min-height:41.6vw;display:flex;align-items:center}
+/* Para você: ilustração do aeroporto, figura à esquerda, texto à direita */
+.aud:first-child{padding-left:45%;justify-content:flex-start;
+  background:linear-gradient(90deg,transparent var(--fade,100%),rgba(239,234,224,.88) calc(var(--fade,100%) + 90px)),
+    #EFEAE0 url(assets/bg-voce.webp) left bottom/cover no-repeat}
+/* Para empresas: ilustração do palco, palco à direita, texto à esquerda */
+.aud:last-child{padding-right:var(--edge);color:var(--on-dark);--rule:var(--line-dark);background:var(--forest-deep)}
+.aud:last-child::before{content:"";position:absolute;inset:0;z-index:-1;transform-origin:left;
+  background:linear-gradient(90deg,rgba(20,42,33,.6) 0%,rgba(20,42,33,.25) 45%,transparent 70%),
+    #1B3A2E url(assets/bg-empresas.webp) right bottom/cover no-repeat}
+.aud-inner{max-width:420px;width:100%}
+.aud .label{margin-bottom:24px}
+.aud .h3{font-size:clamp(26px,2.2vw,34px);line-height:1.15;letter-spacing:-.025em;margin-bottom:20px;max-width:19ch}
+.aud-inner > p{color:var(--ink-2);font-weight:300;font-size:15px;margin-bottom:32px;max-width:40ch}
 .aud ul{list-style:none;margin:0;padding:0;counter-reset:n}
-.aud li{padding:16px 0;font-size:16px;display:flex;gap:20px;align-items:baseline;counter-increment:n}
+.aud li{padding:12px 0;font-size:15px;display:flex;gap:20px;align-items:baseline;counter-increment:n}
 .aud li:last-child{border-bottom:1px solid var(--line)}
 .aud li > span{font-family:var(--f-display);font-size:13px;letter-spacing:.06em;color:var(--gold-ink);min-width:22px}
 .aud:last-child .label,.aud:last-child li > span{color:var(--gold)}
@@ -330,7 +337,10 @@ em{font-style:normal;color:var(--gold-ink)}
   .step + .step{--rule:var(--line)}
   .step .num{margin-bottom:20px}
   .aud-split{grid-template-columns:1fr}
-  .aud:first-child,.aud:last-child{padding-left:var(--gutter);padding-right:var(--gutter)}
+  .aud:first-child,.aud:last-child{padding-left:var(--gutter);padding-right:var(--gutter);min-height:0;justify-content:flex-start}
+  .aud:first-child{background:linear-gradient(rgba(239,234,223,.82),rgba(239,234,223,.82)),#EFEADF url(assets/bg-voce.webp) left center/cover no-repeat}
+  .aud:last-child::before{background:linear-gradient(rgba(20,42,33,.7),rgba(20,42,33,.7)),#1E4234 url(assets/bg-empresas.webp) 70% center/cover no-repeat}
+  .aud-inner{max-width:none}
   .pillars{grid-template-columns:1fr;gap:48px}
   .pillar + .pillar{border-left:0;padding-top:48px}
   .pillar:first-child::before{display:none}
@@ -705,6 +715,28 @@ const countUp = el => {
   };
   requestAnimationFrame(tick);
 };
+
+/* ---- Para quem: encaixa o texto nas áreas vazias das ilustrações ----
+   As imagens têm 1920x1600 e usam "cover". Na da esquerda a figura com a mala
+   termina em x≈620 (a janela vai até 800); na da direita o palco começa em x≈1100.
+   Se a tela for estreita e o texto encostar na ilustração, entra um véu claro atrás dele. */
+const auds = document.querySelectorAll(".aud");
+const fitAud = () => {
+  const [L, R] = auds, inR = R.querySelector(".aud-inner");
+  if (innerWidth <= 960) { L.style.paddingLeft = ""; L.style.removeProperty("--fade"); inR.style.maxWidth = ""; return; }
+  for (let k = 0; k < 3; k++) { // a altura muda quando a largura do texto muda
+    const W = L.offsetWidth, H = L.offsetHeight, sc = Math.max(W / 1920, H / 1600);
+    const padR = parseFloat(getComputedStyle(L).paddingRight);
+    const left = Math.min(Math.max(820 * sc + 40, W * .4), W - 330 - padR);
+    L.style.paddingLeft = left + "px";
+    L.style.setProperty("--fade", (left < 800 * sc ? left - 120 : 9999) + "px");
+    const stage = W - 1920 * sc + 1100 * sc; // início do palco na metade direita
+    const padL = parseFloat(getComputedStyle(R).paddingLeft);
+    inR.style.maxWidth = Math.max(340, Math.min(420, stage - padL - 24)) + "px";
+  }
+};
+addEventListener("resize", fitAud); fitAud();
+document.fonts && document.fonts.ready.then(fitAud);
 
 /* ---- revela ao entrar na tela ---- */
 const targets = ".up,.split,.rule,.panel,.crest-in,.not-list";
