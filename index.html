@@ -130,9 +130,21 @@ em{font-style:normal;color:var(--gold-ink)}
 .rule::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--rule,var(--line));transform-origin:left}
 
 /* ---------- hero ---------- */
-.hero{padding:clamp(56px,9vw,120px) 0 0}
+.hero{position:relative;isolation:isolate;overflow:hidden;padding:clamp(56px,9vw,120px) 0 0;
+  --line:var(--line-dark);--ink-2:var(--on-dark-2);--rule:var(--line-dark)}
+.hero-video{position:absolute;inset:0;z-index:-3;width:100%;height:100%;object-fit:cover;
+  filter:grayscale(1) contrast(1.15) brightness(1)}
+/* tinge o vídeo de verde da marca e escurece onde fica o texto */
+.hero-tint{position:absolute;inset:0;z-index:-2;background:#3F7560;mix-blend-mode:multiply}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(90deg,rgba(17,36,28,.8) 0%,rgba(17,36,28,.52) 50%,rgba(17,36,28,.28) 100%),
+    linear-gradient(to top,rgba(17,36,28,.8),transparent 32%)}
+.hero h1{color:var(--on-dark)}
+.hero .link{color:var(--on-dark)}
+.hero-brand{display:none}
+.hero .crest-sheen{mix-blend-mode:overlay}
 .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:clamp(32px,6vw,96px);align-items:center}
-.hero .label{margin-bottom:28px;color:var(--ink-2);font-size:16px}
+.hero .label{margin-bottom:28px;color:var(--on-dark-2);font-size:16px}
 .hero h1{margin-bottom:40px}
 .hero .lead{max-width:520px;margin-bottom:44px}
 .hero-cta{display:flex;flex-wrap:wrap;gap:20px 32px;align-items:center}
@@ -171,6 +183,7 @@ em{font-style:normal;color:var(--gold-ink)}
 .facts div + div{padding-left:32px;border-left:1px solid var(--line)}
 .facts b{font-family:var(--f-display);font-weight:400;font-size:19px}
 .facts span{font-size:14px;color:var(--ink-2)}
+.hero .facts{margin-top:clamp(64px,8vw,104px)}
 
 /* ---------- manifesto (escuro) ---------- */
 .dark{background:var(--forest-deep);color:var(--on-dark)}
@@ -393,7 +406,15 @@ html:not(.js) .chart{display:none}
 @media (max-width:960px){
   .nav ul{display:none}
   .hero-grid{grid-template-columns:1fr}
-  .hero-crest{display:none}
+  .hero-grid{text-align:center;gap:0}
+  .hero-crest{order:-1;max-width:150px;margin-bottom:28px}
+  .hero-brand{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:18px}
+  .hero-brand span{font-family:var(--f-display);font-size:26px;letter-spacing:-.01em;color:var(--on-dark);white-space:nowrap}
+  .hero-brand small{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+  .hero .lead{margin-left:auto;margin-right:auto}
+  .hero-cta{justify-content:center}
+  .hero .facts{text-align:left}
+  .hero::after{background:linear-gradient(rgba(17,36,28,.55),rgba(17,36,28,.8))}
   .manifesto-grid,.section-head,.house-grid{grid-template-columns:1fr;gap:24px}
   .manifesto-body{grid-template-columns:1fr;margin-top:40px}
   .manifesto .watermark{width:80vw;right:-30%;top:auto;bottom:-10%}
@@ -454,7 +475,7 @@ html:not(.js) .chart{display:none}
       <ul>
         <li><a href="#metodo">Como funciona</a></li>
         <li><a href="#para-quem">Para quem</a></li>
-        <li><a href="#casa">A Challenger</a></li>
+        <li><a href="#casa">Quem somos</a></li>
         <li><a href="#faq">Dúvidas</a></li>
       </ul>
     </nav>
@@ -465,15 +486,19 @@ html:not(.js) .chart{display:none}
 <main id="topo">
 
 <!-- ========== HERO ========== -->
-<section class="hero">
+<section class="hero dark">
+  <!-- vídeo de fundo: placeholder de Nova York (Mixkit, licença livre). Trocar o src pelo vídeo definitivo. -->
+  <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true"
+    src="https://assets.mixkit.co/videos/30544/30544-720.mp4"></video>
+  <div class="hero-tint" aria-hidden="true"></div>
   <div class="wrap">
     <div class="hero-grid">
       <div>
         <p class="label up">Consultoria de inglês em Jundiaí e online</p>
         <h1 class="display split" style="--d:.15s">Inglês sob medida para <em>quem você é.</em></h1>
-        <p class="lead up" style="--d:.7s">Uma aula individual, desenhada a partir do seu objetivo e da sua personalidade. Sem turma e sem apostila de prateleira. Só o inglês que você precisa, com a precisão que ele pede.</p>
+        <p class="lead up" style="--d:.7s">O Challenger Club é uma consultoria de inglês com 10 anos de experiência. Cada aula é desenhada a partir do seu objetivo e da sua personalidade, sem turma cheia e sem apostila de prateleira.</p>
         <div class="hero-cta up" style="--d:.85s">
-          <a class="btn js-wa" href="#" target="_blank" rel="noopener">
+          <a class="btn btn--gold js-wa" href="#" target="_blank" rel="noopener">
             Traçar meu objetivo
             <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12m0 0-5-5m5 5-5 5" stroke="currentColor" stroke-width="1.4"/></svg>
           </a>
@@ -485,7 +510,7 @@ html:not(.js) .chart{display:none}
         <svg class="crest-svg" viewBox="0 0 385 430" role="img" aria-label="Brasão da Challenger Club">
           <defs>
             <linearGradient id="cc-green" x1="192.5" y1="0" x2="192.5" y2="430" gradientUnits="userSpaceOnUse">
-              <stop offset=".495" stop-color="#1D3A2E"/><stop offset="1" stop-color="#45886C"/>
+              <stop offset=".45" stop-color="#F3EEE3"/><stop offset="1" stop-color="#B9D1C4"/>
             </linearGradient>
           </defs>
           <path class="c-lion-line" pathLength="1" d="M213.108 72.2871C227.652 72.2871 241.902 72.5078 244.695 72.8021L249.838 73.2439L244.695 78.6914C241.903 81.7097 237.203 85.8317 234.411 87.9667C227.58 93.0459 227.065 93.7085 228.534 95.2544C229.931 96.5794 236.468 96.8737 239.479 95.696C240.509 95.3278 244.842 92.383 249.102 89.1442C254.685 84.8744 257.991 82.8874 261.003 82.0039C268.936 79.7221 278.265 82.0039 282.305 87.3041C285.905 92.0886 285.171 101.07 280.836 105.118L279.22 106.664L279.441 103.425C280.029 96.5794 275.768 92.3095 269.01 92.972C265.925 93.2668 264.969 93.7085 262.692 96.2117C258.285 100.923 258.138 107.547 262.325 112.995C263.353 114.394 267.981 118.001 272.609 121.093C284.436 128.97 288.183 133.827 289.946 143.176C290.68 147.299 290.313 155.396 289.211 159.592L288.622 161.58L287.374 159.077C285.171 154.955 276.943 147.446 263.279 137.14C254.392 130.442 248.295 125.142 243.814 120.356C240.288 116.529 236.91 113.364 236.467 113.363C234.999 113.363 234.925 115.203 234.485 141.115L234.118 165.628L231.84 169.971C230.518 172.401 226.625 177.848 223.099 182.044C217.663 188.67 212.006 197.061 211.051 199.785C210.905 200.226 207.452 197.43 203.412 193.528C199.371 189.627 193.495 184.841 190.336 182.928C184.975 179.541 184.753 179.32 186.369 178.658C187.324 178.29 191.585 176.302 195.846 174.241C202.383 171.149 204.367 169.677 209.068 164.966C215.239 158.635 218.397 153.115 219.132 147.373C219.499 143.912 219.425 143.545 218.103 143.545C217.295 143.545 214.503 145.239 211.933 147.299C200.988 156.133 194.817 159.445 171.752 168.647C151.183 176.891 144.571 180.278 139.65 185.062C136.638 188.081 135.683 189.627 134.728 193.233C133.039 199.417 132.305 207.293 133.332 207.956C133.847 208.25 136.786 205.968 140.459 202.509C150.669 192.792 160.145 189.184 171.384 190.583C179.758 191.614 182.403 193.233 193.422 204.054C205.395 215.76 208.773 220.25 212.006 228.199C215.018 235.708 217.663 238.358 230.885 247.413C243.079 255.731 249.911 262.062 252.628 267.363C254.392 270.895 254.611 272.073 254.611 278.772V279.024C254.611 283.445 254.611 285.531 255.653 286.606C256.584 287.567 258.346 287.722 261.681 288.017L262.031 288.048C272.83 289.005 277.972 292.611 293.619 310.131C302.653 320.216 310.072 326.842 312.423 326.842C314.701 326.842 312.497 331.405 308.384 335.086C303.021 339.945 296.704 340.607 291.709 336.706C290.165 335.528 284.141 328.976 278.266 322.056C264.676 306.229 256.008 297.396 254.025 297.396C253.069 297.396 252.041 298.205 251.38 299.457C249.617 302.843 245.65 317.418 245.283 321.688C244.621 329.565 249.323 333.246 264.088 336.558C275.327 339.135 276.796 339.797 277.971 343.036C279.147 346.422 278.486 356.949 276.576 363.648C274.812 370.125 274.812 372.335 276.723 375.058C277.531 376.235 278.854 378.518 279.588 379.99L281.056 382.713L272.757 390.002C263.207 398.467 251.675 407.815 250.792 407.816C249.469 407.816 250.204 396.921 251.674 393.387C254.611 386.542 251.82 386.1 244.181 392.283C241.243 394.639 236.688 398.614 234.043 401.043L229.268 405.46L231.546 408.258C234.485 411.938 236.248 415.398 236.248 417.386C236.248 420.109 233.97 424.01 231.692 425.188C229.71 426.219 229.195 426.219 226.625 425.188C222.511 423.495 221.702 423.643 218.177 426.955C214.063 430.709 210.757 431.004 207.525 427.765C205.101 425.263 204.807 422.538 206.497 418.343C208.773 412.895 207.525 411.79 202.089 414.44C198.05 416.355 192.246 416.355 189.748 414.44C188.72 413.631 187.472 411.79 187.03 410.393C186.296 408.257 186.442 407.374 187.691 404.577C188.867 401.78 189.822 400.896 193.568 398.982C196.065 397.804 198.048 396.48 198.05 396.111C198.05 395.743 196.874 394.05 195.478 392.357C192.466 388.75 192.172 385.879 194.377 382.272C196.432 378.885 199.004 377.488 203.118 377.488C207.305 377.488 208.995 378.296 213.769 382.566C215.753 384.333 217.662 385.658 217.956 385.584C218.911 385.29 240.508 362.323 243.74 358.274C246.825 354.372 247.045 353.563 245.576 351.576C244.769 350.471 242.639 350.029 233.162 349.22C219.205 348.043 214.797 346.569 209.361 341.417C204.734 337.074 202.53 332.215 201.943 325.516C201.208 315.873 203.338 309.322 212.373 293.348C219.866 280.245 220.013 279.213 214.797 275.312C212.887 273.913 204.44 268.908 196.065 264.27C178.436 254.479 174.249 251.02 173.441 245.646C172.707 240.787 174.763 236.812 180.713 231.438C183.357 229.083 185.561 226.654 185.561 226.139C185.561 223.267 170.87 222.605 164.405 225.181C156.105 228.494 146.922 236.149 135.537 249.327C126.502 259.632 122.167 261.547 115.262 258.381C110.193 256.099 109.018 253.523 109.311 244.763L109.532 237.475L104.904 233.942C102.333 232.028 99.9828 230.408 99.5413 230.408C98.8079 230.409 97.7784 232.617 97.044 235.781C96.456 238.506 91.9762 243.437 88.303 245.278C82.6462 248.15 71.9949 246.161 67.4408 241.302L65.8255 239.536L67.7348 237.696C68.7632 236.739 70.0856 235.046 70.6735 233.942C72.1424 231.144 71.9217 224.739 70.3053 221.206C68.5425 217.232 62.8867 212.373 57.0102 209.502C53.043 207.662 51.2802 207.293 46.7262 207.22H41.2168L40.8486 213.109L40.4824 218.998L37.3961 219.218C35.4136 219.366 33.43 218.924 31.6672 217.968C29.6103 216.863 28.5087 216.717 27.112 217.232C22.3382 219.072 16.6815 217.305 15.1394 213.403C14.1842 211.122 14.3306 209.944 16.3142 203.76C16.6082 202.876 15.947 202.141 13.8169 201.036C10.1437 199.196 7.79297 196.252 7.79297 193.601C7.79297 190.878 10.5842 186.829 13.4498 185.505C16.0935 184.327 16.3875 183.149 14.7711 180.351C13.523 178.142 13.3755 173.725 14.4782 171.223C15.7273 168.499 19.546 166.953 24.9088 167.101C27.4071 167.174 29.9043 167.175 30.418 167.175C30.9328 167.101 31.3 166.07 31.3 164.45C31.3 159.518 29.7568 155.617 26.0836 151.2C24.1743 148.771 22.4847 146.416 22.4847 145.973C22.4847 145.458 23.3656 144.502 24.4683 143.765C27.3328 141.852 44.8158 141.852 47.6803 143.765C48.7819 144.428 49.6639 145.311 49.6639 145.679C49.6639 146.047 48.3414 147.962 46.6518 149.875C42.4649 154.881 40.8486 158.562 40.8486 163.494V167.69L45.8442 168.204C48.5622 168.499 51.6474 169.162 52.6758 169.752C56.8627 171.886 58.3326 177.259 56.7895 184.547C55.5403 190.215 55.9818 191.172 59.2135 189.994C63.3272 188.596 65.384 189.038 79.1948 194.411C82.2964 195.612 86.2713 197.146 90.4161 198.747L90.4528 198.761L90.4831 198.773L90.5517 198.799C96.2804 201.012 102.318 203.343 106.814 205.086C114.6 208.103 121.21 210.385 121.579 210.164C121.946 210.017 122.094 205.748 121.873 200.815C121.579 193.896 121.726 190.657 122.681 187.123C126.281 172.915 135.978 161.653 151.477 153.703C160.366 149.066 165.802 147.594 181.006 145.385C191.438 143.839 194.89 143.029 198.564 141.262C203.779 138.759 210.17 132.355 212.815 126.834C214.43 123.669 214.578 122.344 214.503 114.467C214.357 100.554 212.154 97.6836 208.774 106.959C206.497 113.29 202.75 119.179 199.298 121.755C194.596 125.362 191.805 126.025 178.657 126.614C166.903 127.203 166.168 127.35 164.332 129.043C155.738 137.214 149.273 136.552 141.413 126.834C139.356 124.258 136.932 121.682 136.124 121.093C133.186 119.032 128.557 119.988 125.84 123.227C124.518 124.773 124.518 124.699 124.811 121.24C125.693 112.112 134.875 106.812 141.486 111.744C142.515 112.48 145.159 115.719 147.364 118.884C149.567 122.049 152.285 125.288 153.313 126.098C155.223 127.423 155.37 127.423 157.941 126.245C159.41 125.51 162.128 123.227 163.965 121.018L167.271 117.117L170.282 118.222C174.028 119.546 180.493 119.546 183.651 118.222C188.572 116.16 191.584 109.609 189.969 104.235C187.104 94.5184 172.927 91.6469 164.919 99.082L163.083 100.849L161.099 98.8612C158.896 96.4319 157.72 91.9418 157.647 85.6108C157.647 80.8998 158.748 78.7648 161.174 78.7648C161.528 78.7254 163.15 78.6226 165.415 78.4789C167.375 78.3546 169.818 78.1997 172.339 78.0289L182.255 77.3663L184.46 74.7897L186.663 72.2871H213.108ZM36.2213 379.843C40.3349 379.843 40.9961 380.063 44.3753 382.788C46.4322 384.333 48.2682 385.953 48.489 386.321C48.7087 386.689 47.3863 389.045 45.5502 391.474C43.7141 393.977 40.7753 398.541 39.0125 401.632L35.8541 407.153L33.8705 403.619C32.7688 401.706 29.9033 397.142 27.4792 393.535L23.1459 387.056L25.2028 384.848C28.8027 380.947 31.2267 379.843 36.2213 379.843ZM32.9885 342.521C33.8704 342.816 36.0005 343.183 37.7634 343.478L40.8486 343.993V355.55C40.8486 361.954 40.6289 367.696 40.4082 368.359C39.747 370.052 32.4016 370.052 31.7404 368.359C31.5196 367.695 31.3 361.586 31.3 354.666V342.153L32.9885 342.521ZM35.9273 230.187C38.4256 230.408 40.5557 230.703 40.6289 230.776C40.7754 230.86 41.0693 242.266 41.2901 256.099L41.3363 258.295C41.7151 276.336 41.819 281.281 43.4505 281.851C44.0666 282.066 44.9006 281.657 46.0495 281.094L46.1578 281.041C46.2473 280.997 46.3388 280.952 46.4322 280.907C49.3699 279.508 55.2474 279.361 57.4507 280.685C58.3326 281.201 59.948 282.673 61.0496 283.998C63.0332 286.354 63.1064 286.649 62.7392 293.348L62.7091 293.888C62.4961 297.7 62.396 299.492 63.2417 300.334C63.9922 301.081 65.4876 301.079 68.31 301.077L68.8375 301.076C74.2725 301.076 75.5217 301.665 92.6364 312.855C111.442 325 112.838 325.81 116.291 325.443C116.731 325.443 118.127 324.338 119.375 323.087C121.212 321.247 121.652 320.216 121.652 317.639C121.652 313.223 120.772 311.235 115.703 304.242C113.352 300.929 111.368 297.69 111.368 297.102C111.368 296.438 113.94 293.274 117.025 289.961C126.942 279.582 135.977 273.766 144.498 272.368C147.07 272 156.766 271.631 166.095 271.631H182.917L186.442 275.091L189.969 278.551L185.709 280.318C175.351 284.661 161.247 296.954 157.281 304.978C155.517 308.658 155.296 309.836 155.59 314.474C155.736 317.566 156.399 321.026 157.133 322.498C157.868 323.97 161.468 328.387 165.066 332.288L171.752 339.356L168.078 343.624C166.022 345.907 160.292 351.796 155.296 356.655L146.261 365.488L145.821 354.078C145.735 352.247 145.655 350.492 145.583 348.915C145.41 345.105 145.284 342.34 145.233 342.079C145.013 340.68 142.809 342.079 136.492 347.821C128.264 355.256 125.179 356.654 118.273 356.066C111.956 355.625 111.368 354.888 113.866 351.134C116.143 347.674 115.849 346.717 112.618 346.717C110.78 346.717 109.458 347.6 106.007 351.207C103.583 353.637 100.277 356.36 98.5871 357.243C93.2243 360.041 83.6747 359.673 79.1206 356.508C78.9741 356.434 79.7085 355.33 80.8102 354.078C81.8386 352.827 82.7205 351.355 82.7205 350.913C82.7205 350.398 82.9413 349.293 83.161 348.483C83.455 347.232 82.7206 345.98 79.9293 343.184C77.9457 341.196 74.2725 336.558 71.7752 332.877C66.7796 325.589 61.4911 320.216 57.3775 318.228C54.3654 316.756 52.7501 317.345 51.501 320.216C48.1217 328.166 44.9633 331.258 40.3349 331.258C35.0464 331.258 29.8301 326.915 29.8301 322.572C29.8301 319.848 28.5077 318.007 26.4509 318.007C19.9875 318.007 16.6815 310.867 20.6486 305.419C21.1922 304.623 21.8793 303.683 22.4923 302.845C22.9554 302.211 23.3761 301.636 23.6607 301.224C24.9088 299.531 24.8355 299.457 22.3372 297.396C15.5066 291.727 17.7831 283.115 26.6716 280.833L30.1973 279.95L30.6388 268.613C30.9317 262.356 31.1524 251.094 31.2257 243.511L31.3 229.672L35.9273 230.187ZM374.349 72.8761C374.643 72.8766 376.113 74.2746 377.655 75.894C382.43 81.194 383.531 84.5806 383.458 93.8559C383.458 103.425 382.209 107.327 376.405 116.013C369.574 126.245 359.878 135.594 333.947 156.795C313.599 173.431 306.18 181.308 302.287 190.437C300.524 194.558 299.568 203.465 300.743 204.202C301.184 204.497 305.518 200.594 310.587 195.367C315.508 190.289 324.03 182.56 329.539 178.217C334.975 173.873 345.259 165.702 352.312 160.107C364.505 150.464 377.728 138.171 381.915 132.503C382.943 131.104 384.045 130.22 384.413 130.515C384.706 130.883 385 135.52 385 140.82C385 150.391 385 150.612 382.503 155.691C378.242 164.304 368.619 173.064 342.395 192.129C315.582 211.563 311.469 215.023 307.796 221.28C305.887 224.445 305.665 225.623 305.665 230.776C305.665 235.413 305.959 237.18 307.06 238.874L308.456 241.008L311.101 237.769C319.989 226.727 329.099 218.703 353.78 200.226C362.081 194.043 372.219 186.166 376.259 182.854L383.751 176.744L384.191 179.026C384.412 180.278 384.633 184.327 384.633 188.007C384.633 200.889 380.886 205.453 355.324 223.709C347.243 229.525 340.558 234.752 340.558 235.341C340.558 236.665 342.835 236.445 350.034 234.457C357.233 232.542 367.517 233.131 372.732 235.781C383.751 241.524 385.661 256.761 376.405 265.448C373.026 268.687 368.325 270.895 363.844 271.411L360.097 271.852L362.742 268.76C368.178 262.356 367.444 252.271 361.053 246.014C356.792 241.745 353.413 240.492 345.994 240.125C337.693 239.757 333.285 241.008 328.584 245.131C324.764 248.517 322.928 251.977 322.928 255.878C322.928 258.528 323.663 259.412 334.901 270.675C349.667 285.544 350.842 287.384 350.842 296.144C350.842 303.874 349.813 306.819 345.48 311.235C340.852 316.021 337.62 317.418 330.127 317.861C329.708 317.883 329.308 317.907 328.924 317.929C326.886 318.049 325.292 318.142 323.745 317.913C318.191 317.092 313.251 312.118 290.568 289.278L289.127 287.826L286.934 285.618C269.818 268.392 251.233 250.505 243.226 243.437C225.964 228.421 224.714 226.8 223.025 218.041C221.114 208.47 224.274 200.374 235.66 185.799C239.7 180.573 243.887 174.462 244.99 172.254C246.826 168.279 246.899 167.91 246.826 153.63C246.826 145.68 246.972 139.127 247.193 139.127C247.49 139.132 252.851 144.209 259.167 150.317C273.27 164.156 274.666 166.586 275.033 177.48C275.254 183.811 275.106 185.136 273.344 189.627C272.242 192.423 270.846 195.22 270.333 195.81C269.451 196.693 269.303 196.546 269.303 194.558C269.303 190.657 265.851 180.939 262.692 176.229C257.771 168.647 256.595 169.309 255.787 180.278C255.199 188.67 253.804 192.423 248.001 201.331C245.577 205.158 243.006 209.502 242.418 210.901C241.022 214.361 241.17 219.882 242.785 223.415C244.255 226.727 317.416 301.883 320.871 303.726C323.589 305.125 325.572 305.052 329.245 303.211C332.845 301.519 335.122 298.279 335.857 293.936C336.665 288.637 334.754 285.839 318.301 268.76C297.218 246.971 292.003 240.346 287.668 229.892C281.717 215.612 283.702 197.576 292.81 183.738C297.879 176.081 303.903 169.898 318.814 157.089C335.196 142.957 345.994 132.503 348.491 128.086C350.107 125.362 350.474 123.889 350.474 119.767C350.474 114.983 350.328 114.614 348.051 112.553C346.068 110.786 345.039 110.419 341.88 110.419C338.354 110.419 337.914 110.64 334.975 113.731C332.699 116.087 331.449 118.222 330.567 121.24C329.906 123.595 328.879 126.393 328.364 127.423C327.042 129.999 321.826 132.503 317.713 132.503C311.689 132.503 301.699 126.32 302.653 123.154C303.902 119.105 309.999 111.448 320.21 101.07C330.127 90.985 331.963 89.3651 337.326 86.7885C345.186 82.8134 352.385 82.1508 360.244 84.5801C363.036 85.3901 365.754 86.1265 366.121 86.1265C367.223 86.1265 372.659 77.6611 373.247 75.0845C373.541 73.9069 373.981 72.8761 374.349 72.8761ZM31.0792 82.9613C31.9611 82.0039 40.1142 82.3717 40.4824 83.329C40.6289 83.8442 40.8486 94.9601 40.9961 108.063L41.2168 131.766H30.5655V107.621C30.5655 94.3004 30.7852 83.1871 31.0792 82.9613ZM202.824 80.2373C194.009 80.2373 192.026 80.4581 191.732 81.3415C190.704 83.9916 193.862 89.8068 197.462 92.0152C201.061 94.2236 206.13 94.0027 209.068 91.5735C212.006 89.0709 213.476 86.1265 213.476 82.8139V80.2373H202.824Z"/>
@@ -497,11 +522,12 @@ html:not(.js) .chart{display:none}
         </svg>
         <span class="crest-sheen" aria-hidden="true"></span>
         </div>
+        <div class="hero-brand" aria-hidden="true"><span>Challenger Club</span><small>English · Focus · Result</small></div>
       </div>
     </div>
 
     <div class="facts rule" data-stagger>
-      <div class="up"><b>Aula individual</b><span>Um professor, um aluno, um plano</span></div>
+      <div class="up"><b>Sob medida</b><span>Aulas individuais ou em grupos de até 4</span></div>
       <div class="up"><b>100% online</b><span>E In Company para empresas</span></div>
       <div class="up"><b>Jundiaí e região</b><span>Atendimento para todo o Brasil</span></div>
     </div>
@@ -509,7 +535,7 @@ html:not(.js) .chart{display:none}
 </section>
 
 <!-- ========== MANIFESTO ========== -->
-<section class="manifesto dark" style="margin-top:clamp(72px,10vw,140px)">
+<section class="manifesto dark">
   <img class="watermark" data-speed="0.18" src="assets/crest-ivory.svg" alt="" aria-hidden="true">
   <div class="wrap">
     <div class="manifesto-grid">
@@ -579,14 +605,14 @@ html:not(.js) .chart{display:none}
       <div class="aud-veil"></div>
       <div class="aud-inner">
         <p class="label up">Para você</p>
-        <h3 class="h3 split">Executivos e profissionais com um objetivo claro.</h3>
-        <p class="up" style="--d:.2s">Do primeiro contato com o idioma à fluência em uma reunião decisiva. O plano acompanha o seu momento.</p>
+        <h3 class="h3 split">Para quem tem um objetivo, profissional ou pessoal.</h3>
+        <p class="up" style="--d:.2s">Da entrevista de emprego à viagem dos sonhos. Aulas individuais ou em grupos de até 4 pessoas, no ritmo da sua vida.</p>
         <ul data-stagger data-step="90" data-delay="200">
-          <li class="rule up"><span>01</span>Reuniões e negociações</li>
-          <li class="rule up"><span>02</span>Entrevistas e processos seletivos</li>
-          <li class="rule up"><span>03</span>Apresentações e conferências</li>
-          <li class="rule up"><span>04</span>Certificações internacionais</li>
-          <li class="rule up"><span>05</span>Viagens, estudos e vida no exterior</li>
+          <li class="rule up"><span>01</span>De entrevistas a negociações e conferências</li>
+          <li class="rule up"><span>02</span>Mais oportunidades e uma vida financeira melhor</li>
+          <li class="rule up"><span>03</span>A viagem dos sonhos</li>
+          <li class="rule up"><span>04</span>Estudos e certificações no exterior</li>
+          <li class="rule up"><span>05</span>Aprender por prazer, no seu ritmo</li>
         </ul>
       </div>
     </article>
@@ -607,7 +633,7 @@ html:not(.js) .chart{display:none}
         <p class="up" style="--d:.75s">Aulas presenciais em Jundiaí e região, ou online para times distribuídos, com o mesmo cuidado individual.</p>
         <ul data-stagger data-step="90" data-delay="800">
           <li class="rule up"><span>01</span>Presencial na sua empresa</li>
-          <li class="rule up"><span>02</span>Aulas individuais ou grupos de até 4</li>
+          <li class="rule up"><span>02</span>Turmas do tamanho que a equipe precisar</li>
           <li class="rule up"><span>03</span>Conteúdo a partir do dia a dia da equipe</li>
           <li class="rule up"><span>04</span>Acompanhamento de evolução</li>
           <li class="rule up"><span>05</span>Banco de horas ao longo do ano</li>
@@ -645,7 +671,7 @@ html:not(.js) .chart{display:none}
 <section class="section house rule" id="casa">
   <div class="wrap">
     <div class="house-grid">
-      <p class="label up">A Challenger</p>
+      <p class="label up">Challenger Club</p>
       <div>
         <blockquote class="split">Ensinamos inglês como se aprende a primeira língua: <em>pela conversa, pelo uso, pelo sentido.</em> Nunca pela tradução.</blockquote>
         <div class="house-meta" data-stagger data-step="140">
@@ -675,7 +701,7 @@ html:not(.js) .chart{display:none}
         </details>
         <details class="up">
           <summary>Vocês dão aulas para empresas?<span class="pm"></span></summary>
-          <p>Sim. Desenhamos programas para equipes e lideranças, presenciais ou online, em aulas individuais ou grupos de até 4 pessoas, a partir da rotina real da empresa.</p>
+          <p>Sim. Desenhamos programas para equipes e lideranças, presenciais ou online, a partir da rotina real da empresa. O formato e o tamanho das turmas são definidos caso a caso, de aulas individuais a grupos maiores.</p>
         </details>
         <details class="up">
           <summary>Como funcionam as aulas?<span class="pm"></span></summary>
@@ -683,7 +709,7 @@ html:not(.js) .chart{display:none}
         </details>
         <details class="up">
           <summary>Quais materiais são usados?<span class="pm"></span></summary>
-          <p>Materiais próprios, desenvolvidos pela Challenger, e uma seleção de materiais internacionais, sempre escolhidos para o seu objetivo. Nunca uma apostila padrão para todos.</p>
+          <p>Materiais próprios, desenvolvidos pelo Challenger Club, e uma seleção de materiais internacionais, sempre escolhidos para o seu objetivo. Nunca uma apostila padrão para todos.</p>
         </details>
         <details class="up">
           <summary>Preciso ter algum nível de inglês para começar?<span class="pm"></span></summary>
@@ -691,7 +717,7 @@ html:not(.js) .chart{display:none}
         </details>
         <details class="up">
           <summary>Posso remarcar uma aula?<span class="pm"></span></summary>
-          <p>Sim, com até 6 horas de antecedência, conforme a disponibilidade dos professores. As horas ficam em um banco válido ao longo do ano.</p>
+          <p>Sim, com até 12 horas de antecedência, conforme a disponibilidade dos professores. As horas ficam em um banco válido ao longo do ano.</p>
         </details>
         <details class="up">
           <summary>Qual é o investimento?<span class="pm"></span></summary>
